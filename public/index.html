@@ -512,6 +512,36 @@
             font-size: 1em;
         }
 
+        .guess-container {
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .guess-container input {
+            flex: 1;
+        }
+
+        .validate-button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1em;
+            transition: var(--transition);
+        }
+
+        .validate-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .validate-button:active {
+            transform: scale(0.98);
+        }
+
         @media (max-width: 768px) {
             .game-container {
                 grid-template-columns: 1fr;
@@ -656,8 +686,9 @@
             <div class="sidebar">
                 <h3>Joueurs</h3>
                 <div id="players-list"></div>
-                <div id="guess-container">
-                    <input type="text" id="guess-input" placeholder="Entrez votre devinette..." onkeypress="handleGuess(event)">
+                <div id="guess-container" class="guess-container">
+                    <input type="text" id="guess-input" placeholder="Entrez votre devinette...">
+                    <button class="validate-button" onclick="handleGuessClick()">Valider</button>
                 </div>
             </div>
         </div>
@@ -768,6 +799,12 @@
         }
 
         guessInput.addEventListener('keypress', handleGuess);
+
+        function handleGuessClick() {
+            const guessInput = document.getElementById('guess-input');
+            const event = new KeyboardEvent('keypress', { key: 'Enter' });
+            handleGuess(event);
+        }
 
         socket.on('games_list', (games) => {
             const gamesList = document.getElementById('games-list');
