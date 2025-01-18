@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Pictionary par Erwan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
             --primary-color: #6C63FF;
@@ -1249,7 +1250,44 @@
         canvas.addEventListener('mousedown', handleMouseDown);
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('mouseup', handleMouseUp);
-        canvas.addEventListener('mouseout', handleMouseUp);
+        canvas.addEventListener('touchstart', handleTouchStart);
+        canvas.addEventListener('touchmove', handleTouchMove);
+        canvas.addEventListener('touchend', handleTouchEnd);
+
+        // Empêcher le défilement sur mobile lors du dessin
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            handleMouseDown(mouseEvent);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            handleMouseMove(mouseEvent);
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            handleMouseUp();
+        }
 
         // Gestionnaires pour les changements d'outils
         color.addEventListener('change', () => {
